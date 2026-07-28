@@ -59,8 +59,10 @@ This ensures chapter progress survives compaction and the next session can conti
 - Metadata format alignment with 8004scan (`endpoints` field, not `services`)
 
 ### ✅ Deployed
-- Landing page: https://aotchi-protocol.pages.dev/ (Cloudflare Pages)
-- Waitlist form with localStorage capture
+- Landing page: https://aotchi.pages.dev (Cloudflare Pages)
+- Waitlist backend: https://aotchi-waitlist.cxto21h.workers.dev (Cloudflare Worker + D1)
+- Waitlist form posts to Worker API, no localStorage dependency
+- GitHub repo: https://github.com/Workstation-ai/aotchi
 - Cyberpunk aesthetic with scanline effects, four pillars, live ticker
 
 ### 🔲 Planned
