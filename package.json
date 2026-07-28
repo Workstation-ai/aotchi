@@ -10,7 +10,10 @@
     "build": "tsc",
     "dev": "tsx src/cli/index.ts",
     "start": "node dist/cli/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "web:build": "cd web && npm run build",
+    "web:dev": "cd web && npm run dev",
+    "deploy": "wrangler pages deploy web/dist --project-name aotchi"
   },
   "keywords": [
     "aotchi",
