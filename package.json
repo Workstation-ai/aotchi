@@ -1,0 +1,37 @@
+{
+  "name": "aotchi",
+  "version": "0.1.0",
+  "description": "Your Agent Creatures — Autonomous on-chain agents with identity, commerce, and payments.",
+  "type": "module",
+  "bin": {
+    "aotchi": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli/index.ts",
+    "start": "node dist/cli/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "aotchi",
+    "agent",
+    "erc-8004",
+    "x402",
+    "bnb-chain",
+    "autonomous-agent"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "conf": "^13.1.0",
+    "ora": "^8.2.0",
+    "viem": "^2.55.10"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.3"
+  }
+}

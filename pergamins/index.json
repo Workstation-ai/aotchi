@@ -1,0 +1,91 @@
+{
+  "index_version": "1.0.0",
+  "last_updated": "2026-07-28",
+
+  "lookup": {
+    "pergamins/manifest.json": {
+      "type": "manifest",
+      "topic": "Master artifact tracker, chapter summaries, decisions, versioning",
+      "priority": "read first"
+    },
+    "pergamins/index.json": {
+      "type": "index",
+      "topic": "File lookup table — maps every doc to its topic, type, and status",
+      "priority": "read first"
+    },
+    "pergamins/cli/overview.md": {
+      "type": "doc",
+      "topic": "CLI architecture, commands, flags, examples",
+      "status": "living",
+      "artifact": "cli"
+    },
+    "pergamins/cli/commands/create.md": {
+      "type": "doc",
+      "topic": "aotchi create — agent creation and optional --deploy",
+      "status": "living",
+      "artifact": "cli.commands.create"
+    },
+    "pergamins/contracts/erc-8004.md": {
+      "type": "doc",
+      "topic": "ERC-8004 Identity Registry — register, tokenURI, ownerOf, setAgentURI",
+      "status": "living",
+      "artifact": "erc-8004-integration"
+    },
+    "pergamins/architecture/overview.md": {
+      "type": "doc",
+      "topic": "System architecture, component diagram, data flow",
+      "status": "living"
+    },
+    "pergamins/product/overview.md": {
+      "type": "product",
+      "topic": "Product vision — SDK positioning, interfaces (CLI, Web, App), ecosystem, roadmap, design principles",
+      "status": "living",
+      "priority": "read first"
+    },
+    "pergamins/product/sdk.md": {
+      "type": "product",
+      "topic": "SDK reference — Agent class API, types, infra modules, usage patterns, metadata format, configuration",
+      "status": "living",
+      "artifact": "sdk"
+    },
+    "pergamins/product/asrs.md": {
+      "type": "asrs",
+      "topic": "Agent Software Requirements Specification — Project, Principals, Features, Scenarios, Components, Resources, Tests",
+      "status": "living",
+      "priority": "read first",
+      "artifact": "asrs"
+    },
+    "pergamins/product/tech-stack.md": {
+      "type": "product",
+      "topic": "Tech stack decision — Cloudflare D1+Workers, Supabase Auth, Freestyle VMs, viem, BSC, x402 cost model",
+      "status": "living",
+      "priority": "read first",
+      "artifact": "tech-stack"
+    },
+    "pergamins/product/hackathon-roadmap.md": {
+      "type": "product",
+      "topic": "Hackathon roadmap — 3 phases (PoC, Landing/Social, SDK MVP), content calendar, success metrics",
+      "status": "living",
+      "priority": "read first"
+    },
+    "web/index.html": {
+      "type": "web",
+      "topic": "Landing page — cyberpunk aesthetic, Tailwind, HUD elements, four pillars, waitlist form",
+      "status": "living",
+      "artifact": "landing-page",
+      "deployed": "https://aotchi-protocol.pages.dev"
+    },
+    "web/x-post.md": {
+      "type": "marketing",
+      "topic": "X/Twitter posts — ambassador repost content, Spanish and English versions",
+      "status": "living",
+      "artifact": "marketing-posts"
+    },
+    "chapters/chapter-001-the-origin.md": {
+      "type": "chapter",
+      "topic": "The Origin — philosophical manifesto",
+      "status": "frozen",
+      "chapter": 1
+    }
+  }
+}

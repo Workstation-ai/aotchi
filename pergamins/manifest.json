@@ -1,0 +1,302 @@
+{
+  "manifest_version": "1.0.0",
+  "project": "AOTCHI",
+  "tagline": "Autonomous on-chain agents. Identity. Commerce. Payments.",
+  "last_updated": "2026-07-28T16:38:00Z",
+  "deployed": {
+    "landing_page": "https://aotchi-protocol.pages.dev",
+    "agent_testnet": "https://8004scan.io/agents/bsc-testnet/1735"
+  },
+
+  "chapters": [
+    {
+      "id": 1,
+      "title": "The Origin",
+      "slug": "the-origin",
+      "status": "written",
+      "summary": "Manifesto, name etymology (ao=蒼 + -tchi), architecture pillars (ERC-8004, ERC-8183, x402, Skills), economy model, 10 commandments, vision 2026-2030",
+      "file": "chapters/chapter-001-the-origin.md"
+    },
+    {
+      "id": 2,
+      "title": "The CLI",
+      "slug": "the-cli",
+      "status": "building",
+      "summary": "AOTCHI CLI scaffold with commander.js, neon display, local storage, wallet generation",
+      "file": null,
+      "artifacts_created": ["cli", "wallet-system", "local-storage", "neon-display"]
+    },
+    {
+      "id": 3,
+      "title": "The Deployment",
+      "slug": "the-deployment",
+      "status": "done-testnet",
+      "summary": "marcus-aurelius deployed on BSC testnet — token #1735, block 121785818, TX 0x7bc0...d35c, 8004scan visible",
+      "file": null,
+      "artifacts_created": ["erc-8004-integration", "set-agent-uri", "product-vision", "sdk-docs", "pergamins-system", "landing-page", "waitlist-form"]
+    },
+    {
+      "id": 4,
+      "title": "The Marketplace",
+      "slug": "the-marketplace",
+      "status": "planned",
+      "summary": "ERC-8183 commerce, job negotiation, escrow, dispute resolution, agent pricing",
+      "file": null
+    },
+    {
+      "id": 5,
+      "title": "The Economy",
+      "slug": "the-economy",
+      "status": "planned",
+      "summary": "x402 payments, self-sustaining agents, LLM cost management, balance wallet, client funds",
+      "file": null
+    },
+    {
+      "id": 6,
+      "title": "The Guild",
+      "slug": "the-guild",
+      "status": "planned",
+      "summary": "Multi-agent cooperation, guilds, revenue sharing, agent-to-agent negotiation, skill composability",
+      "file": null
+    },
+    {
+      "id": 7,
+      "title": "The Void",
+      "slug": "the-void",
+      "status": "planned",
+      "summary": "Mainnet launch, real BNB, full 8004scan UI, production readiness, self-sustaining economy",
+      "file": null
+    }
+  ],
+
+  "artifacts": {
+    "cli": {
+      "type": "tool",
+      "description": "AOTCHI command-line interface",
+      "first_chapter": 2,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "building",
+      "location": "src/cli/",
+      "docs": "pergamins/cli/overview.md",
+      "commands": {
+        "create": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "feed": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "status": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "list": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "pause": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "resume": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "ledger": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "skills": { "first_chapter": 2, "modified_in": [], "state": "stable" }
+      }
+    },
+    "erc-8004-integration": {
+      "type": "contract",
+      "description": "ERC-8004 Identity Registry integration — register, tokenURI, ownerOf, setAgentURI",
+      "first_chapter": 2,
+      "modified_in": [3],
+      "current_version": "0.2.0",
+      "state": "stable",
+      "location": "src/infra/erc8004.ts",
+      "docs": "pergamins/contracts/erc-8004.md",
+      "features": {
+        "register": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "tokenURI": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "ownerOf": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "verifyAgent": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "setAgentURI": { "first_chapter": 3, "modified_in": [], "state": "stable" }
+      }
+    },
+    "wallet-system": {
+      "type": "infra",
+      "description": "Local wallet generation and persistence at ~/.aotchi/wallet.json",
+      "first_chapter": 2,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "stable",
+      "location": "src/infra/erc8004.ts"
+    },
+    "local-storage": {
+      "type": "infra",
+      "description": "Local JSON persistence for agent state at ~/.aotchi/",
+      "first_chapter": 2,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "stable",
+      "location": "src/infra/storage.ts"
+    },
+    "neon-display": {
+      "type": "ui",
+      "description": "Neon terminal UI for agent status display",
+      "first_chapter": 2,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "stable",
+      "location": "src/cli/display.ts"
+    },
+    "set-agent-uri": {
+      "type": "function",
+      "description": "Post-registration metadata update via setAgentURI(signer, tokenId, newURI)",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "stable",
+      "location": "src/infra/erc8004.ts",
+      "docs": "pergamins/contracts/erc-8004.md"
+    },
+    "sdk": {
+      "type": "library",
+      "description": "@aotchi/sdk — TypeScript SDK for building autonomous on-chain agents",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "building",
+      "location": "src/",
+      "docs": "pergamins/product/sdk.md",
+      "features": {
+        "agent-class": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "identity-module": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "wallet-module": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "storage-module": { "first_chapter": 2, "modified_in": [], "state": "stable" },
+        "commerce-module": { "first_chapter": 4, "modified_in": [], "state": "planned" },
+        "payment-module": { "first_chapter": 5, "modified_in": [], "state": "planned" }
+      }
+    },
+    "product-vision": {
+      "type": "doc",
+      "description": "AOTCHI product overview — SDK positioning, interfaces, ecosystem, roadmap",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "building",
+      "location": "pergamins/product/overview.md",
+      "docs": "pergamins/product/overview.md"
+    },
+    "sdk-docs": {
+      "type": "doc",
+      "description": "AOTCHI SDK reference — API surface, types, usage patterns, metadata format",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "building",
+      "location": "pergamins/product/sdk.md",
+      "docs": "pergamins/product/sdk.md"
+    },
+    "asrs": {
+      "type": "spec",
+      "description": "Agent Software Requirements Specification — Principals, Features, Scenarios, Components, Resources, Tests",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "building",
+      "location": "pergamins/product/asrs.md",
+      "docs": "pergamins/product/asrs.md",
+      "compliance_level": "Level 2"
+    },
+    "tech-stack": {
+      "type": "decision",
+      "description": "Technology stack decision — Cloudflare D1+Workers, Supabase Auth, Freestyle VMs, viem, BSC, x402 cost model",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.2.0",
+      "state": "stable",
+      "location": "pergamins/product/tech-stack.md",
+      "docs": "pergamins/product/tech-stack.md"
+    },
+    "hackathon-roadmap": {
+      "type": "roadmap",
+      "description": "Hackathon execution roadmap — 3 phases, content calendar, success metrics, risk mitigation",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "building",
+      "location": "pergamins/product/hackathon-roadmap.md",
+      "docs": "pergamins/product/hackathon-roadmap.md"
+    },
+    "landing-page": {
+      "type": "web",
+      "description": "AOTCHI landing page — cyberpunk aesthetic, HUD elements, four pillars, live ticker",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "building",
+      "location": "web/index.html"
+    },
+    "pergamins-system": {
+      "type": "infra",
+      "description": "Documentation system — manifest.json artifact tracking, index, modular living docs",
+      "first_chapter": 3,
+      "modified_in": [],
+      "current_version": "1.0.0",
+      "state": "stable",
+      "location": "pergamins/",
+      "docs": "pergamins/"
+    },
+    "testing-suite": {
+      "type": "test",
+      "description": "Vitest test suite — 26 tests across entity, wallet, and integration",
+      "first_chapter": 2,
+      "modified_in": [],
+      "current_version": "0.1.0",
+      "state": "stable",
+      "location": "tests/",
+      "sub": {
+        "aotchi.test.ts": { "count": 17, "scope": "entity" },
+        "erc8004.test.ts": { "count": 4, "scope": "wallet" },
+        "integration.test.ts": { "count": 5, "scope": "RPC" }
+      }
+    }
+  },
+
+  "decisions": [
+    {
+      "id": "d001",
+      "title": "Project name: AOTCHI",
+      "decision": "AOTCHI — ao (蒼 blue/life) + -tchi (Tamagotchi nostalgia)",
+      "chapter": 1,
+      "rationale": "Epic philosophical saga, not childish — pirates, cyberpunk, retro-neon, philosophers"
+    },
+    {
+      "id": "d002",
+      "title": "ERC-8004 first, then commerce",
+      "decision": "Implement ERC-8004 identity before ERC-8183 commerce or x402 payments",
+      "chapter": 1,
+      "rationale": "Identity is foundational — agent must exist before it can earn or spend"
+    },
+    {
+      "id": "d003",
+      "title": "CLI framework: commander.js",
+      "decision": "Use commander.js + chalk for CLI, custom neon display module",
+      "chapter": 2,
+      "rationale": "Lightweight, well-known, easy to extend, no unnecessary dependencies"
+    },
+    {
+      "id": "d004",
+      "title": "Metadata: base64 data URI",
+      "decision": "Agent metadata stored as base64 data URI (data:application/json;base64,...)",
+      "chapter": 2,
+      "rationale": "No hosting needed for testnet; works immediately after registration"
+    },
+    {
+      "id": "d005",
+      "title": "8004scan: use endpoints field",
+      "decision": "Use 'endpoints' not 'services' in agent metadata JSON for 8004scan compatibility",
+      "chapter": 3,
+      "rationale": "8004scan parser expects 'endpoints' field; 'services' causes parse warnings and missing data"
+    },
+    {
+      "id": "d006",
+      "title": "Docs structure: pergamins + manifest + index",
+      "decision": "Living docs in /pergamins/ with manifest.json tracking artifacts, chapters, decisions",
+      "chapter": 3,
+      "rationale": "Chapters are narrative snapshots not modified; pergamins is the evolving source of truth"
+    },
+    {
+      "id": "d007",
+      "title": "Docs naming: subfolders over filenames",
+      "decision": "Use subfolders (cli/commands/create.md) not flat names (cli_command_create.md)",
+      "chapter": 3,
+      "rationale": "Scales better, mirrors source layout, cleaner references in manifest"
+    }
+  ]
+}
