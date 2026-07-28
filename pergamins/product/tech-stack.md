@@ -10,15 +10,17 @@
 | Layer | Choice | Cost (Free Tier) | Rationale |
 |-------|--------|-----------------|-----------|
 | **Database** | Cloudflare D1 | $0 (5M reads/day, 5GB, no pause) | Serverless SQLite, edge-native, never pauses |
-| **Auth** | Supabase Auth | $0 (50K MAU) | Best free auth, social OAuth, sessions |
+| **Auth** | Clerk (Hobby) + RainbowKit | $0 (50K MRU, Web3 wallets) | Social OAuth + Web3 wallet auth (MetaMask, OKX, Base) |
+| **Wallet Connect** | RainbowKit + Wagmi + Viem | $0 | WalletConnect, Binance Wallet, Full wallet management |
 | **Web** | Vite + React (Cloudflare Pages) | $0 (unlimited static) | Fast build, edge deploy |
 | **API** | Cloudflare Workers | $0 (100K req/day) | Edge functions, global |
 | **KV Cache** | Cloudflare KV | $0 (100K reads/day) | Session cache, config |
 | **Object Storage** | Cloudflare R2 | $0 (10GB, no egress) | Agent artifacts, logs |
-| **Wallets** | viem (self-managed) | $0 | Generate/store wallets in D1 |
+| **Agent SDK** | BNB Agent SDK (Python) | $0 | ERC-8004, ERC-8183, x402, wallet management |
+| **Wallets** | viem + EVMWalletProvider | $0 | Keystore V3 encryption, D1 storage |
 | **Agent Runtime** | Freestyle VMs | $0 (10 VMs, 20 vCPU-h/day) | Real Linux VMs for agent execution |
 | **Blockchain** | BSC (testnet → mainnet) | Gas only | Already integrated |
-| **Pagos** | x402 | Agent-funded | Agents pay for own infrastructure |
+| **Pagos** | x402 + MPP | Agent-funded | Agents pay for own infrastructure |
 
 **Total at launch: $0/month** (all free tiers)
 
@@ -64,9 +66,10 @@
 │  └──────────┘  └──────────┘                            │
 │                                                         │
 │  ┌──────────┐                                          │
-│  │ Supabase │                                          │
+│  │ Clerk    │                                          │
 │  │ Auth     │                                          │
-│  │ (50K MAU)│                                          │
+│  │ +Rainbow │                                          │
+│  │ (Web3)   │                                          │
 │  └──────────┘                                          │
 └─────────────────────────────────────────────────────────┘
          │                              │
@@ -102,17 +105,38 @@
 - R2: Agent artifacts, logs, deliverables
 - Pages: Web dashboard (Vite + React)
 
-### 3.2 Supabase Auth
+### 3.2 Clerk Auth + RainbowKit Wallet Connect
 
 **Free Tier:**
-- 50,000 MAU
-- Social OAuth providers (Google, GitHub, etc.)
-- Anonymous sign-ins
-- Custom SMTP
+- Clerk Hobby: 50,000 MRU, free forever
+- RainbowKit + Wagmi + Viem: all open source, $0
 
 **What we use it for:**
-- User authentication only (not database)
-- OAuth login (Google, GitHub)
+- Social OAuth login (Google, GitHub)
+- Email OTP / magic links
+- Web3 wallet auth (MetaMask, OKX, Base, Coinbase Wallet)
+- Session management + user profiles
+- Wallet connection UI (RainbowKit)
+- Binance Wallet + WalletConnect via custom RainbowKit connectors
+
+**Wallet flow:**
+1. User signs in (email OTP or social OAuth) — Clerk handles
+2. User connects wallet (RainbowKit — MetaMask, OKX, WalletConnect, Binance) — wallet address becomes identity
+3. Wallet address linked to Clerk user profile
+4. Agent created → viem generates wallet → encrypted key stored in D1
+5. All agent ops signed by user's wallet via BNB Agent SDK
+
+**Why Clerk over Supabase:**
+- Native Web3 wallet auth (SIWE)
+- Built-in user management, social OAuth, magic links
+- Free tier generous (50K MRU)
+- RainbowKit fills the WalletConnect + Binance Wallet gap
+- Better Cloudflare integration path
+
+**Why RainbowKit over Clerk wallets alone:**
+- Clerk supports MetaMask, OKX, Base, Coinbase, Solana
+- Missing: Binance Wallet (most popular BSC wallet) and WalletConnect (mobile)
+- RainbowKit covers both via WalletConnect + custom connectors
 - Session management
 
 ### 3.3 BNB Agent SDK (BSC Adapter)
@@ -153,22 +177,34 @@
 - 10 agents = 10 vCPU-h/day (well within free tier)
 - 100 agents = need Hobby ($50/mo)
 
-### 3.5 viem (Wallets — Self-Managed)
+### 3.5 Clerk Auth + RainbowKit Wallet Connect + viem (Agent Wallets)
 
-**Cost: $0** (open source library)
+**Cost: $0** (Clerk Hobby free tier + open source libraries)
 
 **What we use it for:**
-- Generate wallet key pairs
-- Store encrypted keys in D1
-- Sign transactions
-- Read on-chain state
+- **Clerk**: Social OAuth, email OTP, session management, user profiles
+- **RainbowKit + Wagmi**: Wallet connection UI (MetaMask, OKX, Binance Wallet, WalletConnect, Coinbase Wallet)
+- **viem**: Agent wallet generation, transaction signing, on-chain reads
 
-**Flow:**
-1. User creates agent → viem generates wallet
-2. Wallet address stored in D1 (public)
-3. Private key encrypted with user's auth token → stored in D1
-4. User funds agent by sending BNB to wallet address
-5. Agent uses wallet to sign x402 payments
+**Auth + Wallet flow:**
+1. User signs in via Clerk (email OTP or social OAuth) — Clerk manages the session
+2. User connects wallet via RainbowKit (MetaMask, OKX, Binance Wallet, WalletConnect) — wallet address becomes the user's Web3 identity
+3. Clerk user profile linked to wallet address
+4. User creates agent → viem generates agent wallet → encrypted key stored in D1 (key encrypted with Clerk session token)
+5. Agent registered on-chain via ERC-8004 (using agent wallet)
+6. Agent earns/spends via ERC-8183 + x402 (BNB Agent SDK)
+7. All agent ops signed by user's connected wallet or agent wallet via BNB Agent SDK
+
+**Why not Supabase Auth:**
+- Clerk has native SIWE/Web3 wallet auth built in
+- RainbowKit fills the WalletConnect + Binance Wallet gap that Clerk lacks
+- Better free tier (50K MRU vs Supabase's 50K MAU which pauses idle projects)
+- Single platform for auth + session + user management
+
+**Why not just Clerk wallets:**
+- Clerk supports MetaMask, OKX, Base, Coinbase, Solana
+- Missing: Binance Wallet (most popular BSC wallet) and WalletConnect (mobile users)
+- RainbowKit covers both via WalletConnect + custom Binance connector
 
 ### 3.6 BSC (Blockchain)
 
@@ -345,7 +381,8 @@ Week 7-8: Polish & Launch
 
 | When | What | Why |
 |------|------|-----|
-| >50K users | Clerk auth | Better B2B, Web3 login |
+| Launch | Clerk Hobby + RainbowKit | Auth + wallet connection (free tier, 50K MRU) |
+| >50K users | Clerk Pro ($25/mo) | MFA, passkeys, unlimited social connections |
 | >100 agents | Freestyle Hobby | More VM capacity |
 | >1000 agents | Freestyle Pro | Production VMs |
 | Mainnet | Real BNB | Production agents |
