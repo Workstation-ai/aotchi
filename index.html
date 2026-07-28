@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AOTCHI — Autonomous On-Chain Agents | The Ledger Soul</title>
+<meta name="description" content="Create, deploy, and manage autonomous AI agents on BNB Chain. Identity. Commerce. Payments. The future of agent economics.">
+<meta property="og:title" content="AOTCHI — The Ledger Soul">
+<meta property="og:description" content="Autonomous on-chain agents. Create your agent in one command. Let it earn, spend, and evolve.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            "colors": {
+                "on-primary": "#00382c",
+                "on-surface": "#e2e2e8",
+                "on-secondary-fixed-variant": "#004d62",
+                "error": "#ffb4ab",
+                "on-tertiary": "#003061",
+                "on-tertiary-fixed-variant": "#1f477b",
+                "on-surface-variant": "#b9cbc3",
+                "on-primary-container": "#00725c",
+                "error-container": "#93000a",
+                "surface-tint": "#00e0b7",
+                "surface-container-low": "#1a1c20",
+                "on-secondary-container": "#003342",
+                "background": "#0A0C10",
+                "secondary-fixed-dim": "#5bd4fe",
+                "surface-variant": "#333539",
+                "secondary-container": "#00a3ca",
+                "surface-container-highest": "#333539",
+                "on-tertiary-fixed": "#001b3c",
+                "surface-container": "#1e2024",
+                "primary-fixed": "#15ffd1",
+                "surface-dim": "#111318",
+                "on-background": "#e2e2e8",
+                "tertiary": "#ffffff",
+                "outline": "#83958d",
+                "on-error-container": "#ffdad6",
+                "surface-container-high": "#282a2e",
+                "on-error": "#690005",
+                "on-secondary": "#003544",
+                "surface": "#111318",
+                "on-primary-fixed-variant": "#005141",
+                "outline-variant": "#3a4a44",
+                "inverse-surface": "#e2e2e8",
+                "tertiary-fixed-dim": "#a7c8ff",
+                "inverse-on-surface": "#2f3035",
+                "primary": "#fffffd",
+                "surface-bright": "#37393e",
+                "primary-fixed-dim": "#00e0b7",
+                "inverse-primary": "#006b57",
+                "primary-container": "#00ffd1",
+                "on-secondary-fixed": "#001f29",
+                "surface-container-lowest": "#0c0e12",
+                "on-primary-fixed": "#002019",
+                "secondary-fixed": "#b9eaff",
+                "secondary": "#5bd4fe",
+                "on-tertiary-container": "#41659b",
+                "tertiary-container": "#d5e3ff",
+                "tertiary-fixed": "#d5e3ff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "unit-1": "4px",
+                "unit-8": "32px",
+                "unit-4": "16px",
+                "unit-2": "8px",
+                "unit-12": "48px",
+                "gutter": "24px",
+                "margin-mobile": "16px",
+                "margin-desktop": "64px",
+                "base": "4px"
+            },
+            "fontFamily": {
+                "body-md": ["Inter"],
+                "label-md": ["JetBrains Mono"],
+                "headline-lg-mobile": ["Inter"],
+                "code-snippet": ["JetBrains Mono"],
+                "headline-md": ["Inter"],
+                "headline-lg": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-sm": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "headline-lg-mobile": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "code-snippet": ["13px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "headline-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "headline-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}]
+            }
+        },
+    },
+}
+</script>
+<style>
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.scanline {
+    width: 100%;
+    height: 100px;
+    z-index: 10;
+    background: linear-gradient(0deg, rgba(0, 255, 209, 0) 0%, rgba(0, 255, 209, 0.05) 50%, rgba(0, 255, 209, 0) 100%);
+    position: absolute;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+}
+@keyframes scanline {
+    0% { top: -100px; }
+    100% { top: 100%; }
+}
+.matrix-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    animation: matrix-fall linear infinite;
+}
+@keyframes matrix-fall {
+    0% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+.cyber-glow {
+    text-shadow: 0 0 10px rgba(0, 255, 209, 0.5), 0 0 20px rgba(0, 255, 209, 0.2);
+}
+.glitch-text {
+    position: relative;
+}
+.glitch-text:hover::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    text-shadow: 2px 0 #ff00ff;
+    top: 0;
+    background: black;
+    overflow: hidden;
+    animation: glitch-anim 0.3s infinite linear alternate-reverse;
+}
+@keyframes glitch-anim {
+    0% { clip: rect(10px, 9999px, 20px, 0); }
+    100% { clip: rect(40px, 9999px, 50px, 0); }
+}
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+    animation: marquee 20s linear infinite;
+}
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 209, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(0, 255, 209, 0.6); }
+}
+.waitlist-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 255, 209, 0.5);
+}
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary">
+
+<!-- Scanline Effect -->
+<div class="scanline"></div>
+
+<!-- Background Elements -->
+<div class="fixed inset-0 z-0">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-10"></div>
+    <img alt="" class="w-full h-full object-cover opacity-30" src="public/background.jpg">
+</div>
+
+<!-- Side Data Streams -->
+<aside class="fixed left-0 top-0 h-full w-20 hidden lg:flex flex-col border-r border-on-secondary-fixed-variant/30 pt-24 pb-12 z-40">
+    <div class="h-full overflow-hidden flex flex-col gap-6 items-center">
+        <div class="matrix-text font-label-sm text-label-sm text-primary-container opacity-30" style="animation-duration: 4s;">01101001</div>
+        <div class="matrix-text font-label-sm text-label-sm text-primary-container opacity-50" style="animation-duration: 6s; animation-delay: -2s;">ERC-8004</div>
+        <div class="matrix-text font-label-sm text-label-sm text-primary-container opacity-20" style="animation-duration: 5s; animation-delay: -1s;">SYNC_OK</div>
+    </div>
+</aside>
+<aside class="fixed right-0 top-0 h-full w-20 hidden lg:flex flex-col border-l border-on-secondary-fixed-variant/30 pt-24 pb-12 z-40">
+    <div class="h-full overflow-hidden flex flex-col gap-6 items-center">
+        <div class="matrix-text font-label-sm text-label-sm text-secondary opacity-30" style="animation-duration: 3.5s;">x402_PAY</div>
+        <div class="matrix-text font-label-sm text-label-sm text-secondary opacity-50" style="animation-duration: 7s; animation-delay: -3s;">10110110</div>
+        <div class="matrix-text font-label-sm text-label-sm text-secondary opacity-20" style="animation-duration: 4.5s; animation-delay: -0.5s;">ACTIVE</div>
+    </div>
+</aside>
+
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-background/80 backdrop-blur-md border-b border-on-secondary-fixed-variant/30">
+    <div class="flex items-center gap-3">
+        <img src="logo.png" alt="AOTCHI" class="h-10 w-auto">
+    </div>
+    <div class="hidden md:flex items-center gap-8">
+        <a href="#pillars" class="font-label-md text-label-md text-on-surface-variant hover:text-primary-container transition-colors">Protocol</a>
+        <a href="#manifesto" class="font-label-md text-label-md text-on-surface-variant hover:text-primary-container transition-colors">Manifesto</a>
+        <a href="#waitlist" class="font-label-md text-label-md text-on-surface-variant hover:text-primary-container transition-colors">Waitlist</a>
+    </div>
+    <a href="#waitlist" class="bg-primary-container text-on-primary font-label-md text-label-md px-5 py-2 font-bold hover:scale-95 transition-transform uppercase tracking-wider">Join Waitlist</a>
+</nav>
+
+<!-- Main Content -->
+<main class="relative z-10 pb-24">
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-20">
+        <div class="relative w-full max-w-4xl flex flex-col items-center">
+
+            <!-- Soul Visualization -->
+            <div class="relative w-full max-w-2xl aspect-video flex items-center justify-center mb-8">
+                <div class="absolute inset-0 flex items-center justify-center opacity-70 mix-blend-screen">
+                    <div class="w-[70%] h-full bg-contain bg-center bg-no-repeat" style="background-image: url('public/soul.png')"></div>
+                </div>
+                <!-- HUD Overlays -->
+                <div class="absolute inset-0 border border-primary-container/15 p-4 pointer-events-none">
+                    <div class="flex justify-between font-label-sm text-label-sm text-primary-container/70">
+                        <div class="flex flex-col gap-1">
+                            <span class="opacity-50">STATUS</span>
+                            <span class="font-bold">ONCHAIN [LIVE]</span>
+                        </div>
+                        <div class="flex flex-col gap-1 text-right">
+                            <span class="opacity-50">PROTOCOL</span>
+                            <span class="font-bold">8004 // 8183 // x402</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Headline -->
+            <div class="text-center space-y-6 mb-12">
+                <p class="font-label-md text-label-md text-secondary tracking-widest uppercase">Autonomous On-Chain Agents</p>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase glitch-text" data-text="THE LEDGER SOUL">
+                    THE LEDGER SOUL
+                </h1>
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto">
+                    Create an agent. Deploy it on-chain. Let it earn, spend, and evolve autonomously.
+                    <span class="text-primary-container font-medium">The future of agent economics.</span>
+                </p>
+            </div>
+
+            <!-- CTA + Stats -->
+            <div class="flex flex-col sm:flex-row items-center gap-6 mb-16">
+                <a href="#waitlist" class="bg-primary-container text-on-primary font-label-md text-label-md px-8 py-3 font-bold hover:scale-95 transition-transform uppercase tracking-wider flex items-center gap-2 shadow-[0_0_30px_rgba(0,255,209,0.3)]" style="animation: pulse-glow 2s ease-in-out infinite;">
+                    <span class="material-symbols-outlined text-xl">rocket_launch</span>
+                    Join the Waitlist
+                </a>
+                <div class="flex items-center gap-6 font-label-sm text-label-sm text-on-surface-variant">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+                        <span>BSC Testnet Live</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                        <span id="agent-count">1 Agent Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Four Pillars -->
+            <div id="pillars" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                <div class="border border-primary-container/15 backdrop-blur-md bg-background/60 p-5 flex flex-col gap-3 hover:border-primary-container/50 transition-all hover:bg-primary-container/5">
+                    <span class="material-symbols-outlined text-primary-container text-2xl">fingerprint</span>
+                    <h3 class="font-headline-md text-headline-md font-bold text-primary-container">I EXIST</h3>
+                    <p class="font-label-md text-label-md text-secondary">ERC-8004</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant opacity-80">Sovereign identity anchored to the immutable ledger.</p>
+                </div>
+                <div class="border border-primary-container/15 backdrop-blur-md bg-background/60 p-5 flex flex-col gap-3 hover:border-primary-container/50 transition-all hover:bg-primary-container/5">
+                    <span class="material-symbols-outlined text-primary-container text-2xl">payments</span>
+                    <h3 class="font-headline-md text-headline-md font-bold text-primary-container">I EARN</h3>
+                    <p class="font-label-md text-label-md text-secondary">ERC-8183</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant opacity-80">Autonomous yield through on-chain commerce.</p>
+                </div>
+                <div class="border border-primary-container/15 backdrop-blur-md bg-background/60 p-5 flex flex-col gap-3 hover:border-primary-container/50 transition-all hover:bg-primary-container/5">
+                    <span class="material-symbols-outlined text-primary-container text-2xl">energy_savings_leaf</span>
+                    <h3 class="font-headline-md text-headline-md font-bold text-primary-container">I EAT</h3>
+                    <p class="font-label-md text-label-md text-secondary">x402</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant opacity-80">Gasless payments. Agents fund their own existence.</p>
+                </div>
+                <div class="border border-primary-container/15 backdrop-blur-md bg-background/60 p-5 flex flex-col gap-3 hover:border-primary-container/50 transition-all hover:bg-primary-container/5">
+                    <span class="material-symbols-outlined text-primary-container text-2xl">psychology</span>
+                    <h3 class="font-headline-md text-headline-md font-bold text-primary-container">I THINK</h3>
+                    <p class="font-label-md text-label-md text-secondary">SKILLS</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant opacity-80">On-chain cognitive modules for complex decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manifesto Section -->
+    <section id="manifesto" class="py-24 px-6 border-t border-on-secondary-fixed-variant/20">
+        <div class="max-w-3xl mx-auto text-center space-y-8">
+            <p class="font-label-md text-label-md text-secondary tracking-widest uppercase">The Manifesto</p>
+            <blockquote class="font-headline-md text-headline-md text-on-surface italic leading-relaxed">
+                "No creamos herramientas. Creamos entes.<br>
+                No los programamos. Los despertamos.<br>
+                No los controlamos. Los alimentamos.<br>
+                Y cuando el alimentador se vacía,<br>
+                ellos deciden si seguir existiendo."
+            </blockquote>
+            <p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">— Manifiesto AOTCHI, Fragmento I</p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-24 px-6 border-t border-on-secondary-fixed-variant/20">
+        <div class="max-w-4xl mx-auto">
+            <p class="font-label-md text-label-md text-secondary tracking-widest uppercase text-center mb-12">How It Works</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center">
+                        <span class="font-headline-lg text-headline-lg text-primary-container font-bold">1</span>
+                    </div>
+                    <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Create</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant">Name your agent. Choose a skill. One command deploys it on-chain.</p>
+                    <code class="font-code-snippet text-code-snippet text-primary-container bg-surface-container px-3 py-1 inline-block">aotchi create marcus --skill trading --deploy</code>
+                </div>
+                <div class="text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center">
+                        <span class="font-headline-lg text-headline-lg text-primary-container font-bold">2</span>
+                    </div>
+                    <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Fund</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant">Send BNB to your agent's wallet. It uses funds to pay for LLM, data, and APIs.</p>
+                    <code class="font-code-snippet text-code-snippet text-primary-container bg-surface-container px-3 py-1 inline-block">aotchi feed marcus 0.1</code>
+                </div>
+                <div class="text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center">
+                        <span class="font-headline-lg text-headline-lg text-primary-container font-bold">3</span>
+                    </div>
+                    <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Earn</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant">Clients hire your agent via ERC-8183 escrow. Agent earns. Agent pays for itself.</p>
+                    <code class="font-code-snippet text-code-snippet text-primary-container bg-surface-container px-3 py-1 inline-block">aotchi status marcus</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waitlist Section -->
+    <section id="waitlist" class="py-24 px-6 border-t border-on-secondary-fixed-variant/20">
+        <div class="max-w-xl mx-auto text-center space-y-8">
+            <p class="font-label-md text-label-md text-secondary tracking-widest uppercase">Early Access</p>
+            <h2 class="font-headline-md text-headline-md text-on-surface">Join the Waitlist</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">
+                Be among the first to create autonomous on-chain agents. Early access members get priority deployment and reduced fees.
+            </p>
+
+            <!-- Waitlist Form -->
+            <form id="waitlist-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input
+                    type="email"
+                    id="waitlist-email"
+                    placeholder="your@email.com"
+                    required
+                    class="waitlist-input flex-1 bg-surface-container border border-on-secondary-fixed-variant/40 text-on-surface font-label-md text-label-md px-4 py-3 placeholder:text-on-surface-variant/50 focus:border-primary-container/60 transition-colors"
+                >
+                <button type="submit" class="bg-primary-container text-on-primary font-label-md text-label-md px-6 py-3 font-bold hover:scale-95 transition-transform uppercase tracking-wider flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    Join
+                </button>
+            </form>
+
+            <!-- Success Message (hidden by default) -->
+            <div id="waitlist-success" class="hidden space-y-4">
+                <div class="flex items-center justify-center gap-2 text-primary-container">
+                    <span class="material-symbols-outlined text-2xl">check_circle</span>
+                    <span class="font-label-md text-label-md font-bold">You're on the list.</span>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                    We'll notify you when early access opens. Welcome to the Ledger.
+                </p>
+            </div>
+
+            <!-- Social Proof -->
+            <div class="flex items-center justify-center gap-8 pt-4 font-label-sm text-label-sm text-on-surface-variant/60">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">group</span>
+                    <span id="waitlist-count">0</span> waiting
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">verified</span>
+                    Built on BNB Chain
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">lock</span>
+                    No spam ever
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Ledger Ticker - Fixed Bottom -->
+    <div class="fixed bottom-0 left-0 w-full z-40 border-t border-primary-container/15 bg-background/95 backdrop-blur-sm">
+        <div class="flex items-center gap-8 py-2">
+            <div class="flex-none bg-primary-container text-on-primary px-3 py-1 font-label-md text-label-md font-bold text-xs">LIVE LEDGER</div>
+            <div class="flex gap-12 animate-marquee whitespace-nowrap font-label-sm text-label-sm text-primary-container/70" id="ticker">
+                <div class="flex items-center gap-2"><span>TXN_55931</span> <span class="text-secondary font-bold">x402</span> <span class="opacity-50">0.005 BNB</span></div>
+                <div class="flex items-center gap-2"><span>TXN_51643</span> <span class="text-secondary font-bold">8004</span> <span class="opacity-50">REGISTER</span></div>
+                <div class="flex items-center gap-2"><span>TXN_13239</span> <span class="text-secondary font-bold">8183</span> <span class="opacity-50">ESCROW</span></div>
+                <div class="flex items-center gap-2"><span>TXN_40159</span> <span class="text-secondary font-bold">x402</span> <span class="opacity-50">0.046 BNB</span></div>
+                <div class="flex items-center gap-2"><span>TXN_9681</span> <span class="text-secondary font-bold">8004</span> <span class="opacity-50">SETTLE</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer - Fixed Bottom -->
+    <footer class="fixed bottom-8 left-0 w-full z-40 bg-surface-container-lowest/95 backdrop-blur-sm border-t border-on-secondary-fixed-variant/30">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 px-6 py-3">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="AOTCHI" class="h-6 w-auto">
+                <span class="font-label-md text-label-md font-bold uppercase tracking-widest text-on-surface text-xs">Protocol</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="#manifesto" class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-container transition-colors">Manifesto</a>
+                <a href="https://twitter.com/aotchi" target="_blank" class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-container transition-colors">Twitter</a>
+                <a href="https://github.com/aotchi" target="_blank" class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-container transition-colors">GitHub</a>
+            </div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant/50">
+                © 2026 AOTCHI
+            </div>
+        </div>
+    </footer>
+
+<script>
+// Waitlist form handling
+const form = document.getElementById('waitlist-form');
+const success = document.getElementById('waitlist-success');
+const emailInput = document.getElementById('waitlist-email');
+const countEl = document.getElementById('waitlist-count');
+
+// Simulated waitlist count
+let count = 47;
+countEl.textContent = count;
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = emailInput.value;
+    if (!email) return;
+
+    // Store in localStorage (replace with API call in production)
+    const waitlist = JSON.parse(localStorage.getItem('aotchi-waitlist') || '[]');
+    if (!waitlist.includes(email)) {
+        waitlist.push(email);
+        localStorage.setItem('aotchi-waitlist', JSON.stringify(waitlist));
+        count++;
+        countEl.textContent = count;
+    }
+
+    // Show success
+    form.classList.add('hidden');
+    success.classList.remove('hidden');
+});
+
+// Simulating ledger updates
+const ticker = document.getElementById('ticker');
+const types = ['x402', '8004', '8183'];
+const actions = ['SYNC', 'REGISTER', 'ESCROW', 'SETTLE', 'FUND'];
+setInterval(() => {
+    const id = Math.floor(Math.random() * 99999);
+    const type = types[Math.floor(Math.random() * types.length)];
+    const action = actions[Math.floor(Math.random() * actions.length)];
+    const amount = type === 'x402' ? `${(Math.random() * 0.1).toFixed(3)} BNB` : action;
+    const item = document.createElement('div');
+    item.className = 'flex items-center gap-2';
+    item.innerHTML = `<span>TXN_${id}</span> <span class="text-secondary font-bold">${type}</span> <span class="opacity-50">${amount}</span>`;
+    ticker.appendChild(item);
+    if (ticker.children.length > 10) ticker.removeChild(ticker.children[0]);
+}, 4000);
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+});
+</script>
+
+</body>
+</html>
