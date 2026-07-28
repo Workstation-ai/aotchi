@@ -1,7 +1,7 @@
 # AOTCHI Tech Stack Decision
 
 > **Status**: Living document — canonical reference for technology choices
-> **Last updated**: Chapter 3 (The Deployment)
+> **Last updated**: July 2026 — Clerk + RainbowKit final decision
 
 ---
 
