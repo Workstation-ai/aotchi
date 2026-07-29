@@ -1,3 +1,4 @@
 name = "aotchi"
-pages_build_output_dir = "web/dist"
+pages_build_output_dir = "aotchi/web/dist"
+pages_build_command = "cd aotchi/web && npm install && npm run build"
 compatibility_date = "2026-07-28"
