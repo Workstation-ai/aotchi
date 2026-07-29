@@ -12,7 +12,7 @@
 | **Database** | Cloudflare D1 | $0 (5M reads/day, 5GB, no pause) | Serverless SQLite, edge-native, never pauses |
 | **Auth** | Clerk (Hobby) + RainbowKit | $0 (50K MRU, Web3 wallets) | Social OAuth + Web3 wallet auth (MetaMask, OKX, Base) |
 | **Wallet Connect** | RainbowKit + Wagmi + Viem | $0 | WalletConnect, Binance Wallet, Full wallet management |
-| **Web** | Vite + React (Cloudflare Pages) | $0 (unlimited static) | Fast build, edge deploy |
+| **Web** | Vite + React + Clerk + RainbowKit | Cloudflare Pages (web/dist) | $0 | React SPA with Clerk auth + RainbowKit wallet connection; cyberpunk neon design |
 | **API** | Cloudflare Workers | $0 (100K req/day) | Edge functions, global |
 | **KV Cache** | Cloudflare KV | $0 (100K reads/day) | Session cache, config |
 | **Object Storage** | Cloudflare R2 | $0 (10GB, no egress) | Agent artifacts, logs |
