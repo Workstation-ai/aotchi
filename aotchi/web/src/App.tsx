@@ -6,6 +6,7 @@ import { Manifesto } from "./components/Manifesto";
 import { WaitlistSection } from "./components/WaitlistSection";
 import { Ticker } from "./components/Ticker";
 import { Footer } from "./components/Footer";
+import { FloatingWaitlistButton } from "./components/FloatingWaitlistButton";
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
       </main>
       <Footer />
       <Ticker />
+      <FloatingWaitlistButton />
     </div>
   );
 }
