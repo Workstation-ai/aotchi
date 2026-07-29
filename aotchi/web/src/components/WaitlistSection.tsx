@@ -1,11 +1,5 @@
-import { useState } from "react";
-
-interface WaitlistResponse {
-  success?: boolean;
-  id?: number;
-  error?: string;
-  count?: number;
-}
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
 
 export function WaitlistSection() {
   const [email, setEmail] = useState("");
@@ -13,19 +7,20 @@ export function WaitlistSection() {
   const [message, setMessage] = useState("");
   const [count, setCount] = useState<number | null>(null);
 
-  const API_URL = "https://aotchi-waitlist.cxto21h.workers.dev";
-
   async function fetchCount() {
     try {
-      const res = await fetch(`${API_URL}/`);
-      if (res.ok) {
-        const data = (await res.json()) as WaitlistResponse;
-        setCount(data.count ?? null);
+      const { data, error } = await supabase.rpc("get_waitlist_count");
+      if (!error && data !== null) {
+        setCount(data as number);
       }
     } catch {
       // silent fail
     }
   }
+
+  useEffect(() => {
+    fetchCount();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,23 +35,29 @@ export function WaitlistSection() {
     setMessage("");
 
     try {
-      const res = await fetch(`${API_URL}/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.toLowerCase().trim(), source: "landing-page" }),
-      });
+      const { error } = await supabase.from("waitlist").insert([
+        {
+          email: email.toLowerCase().trim(),
+          source: "landing-page",
+        },
+      ]);
 
-      const data = (await res.json()) as WaitlistResponse;
-
-      if (res.ok && data.success) {
-        setStatus("success");
-        setMessage("Welcome to the future. Check your inbox for early access.");
-        setEmail("");
-        fetchCount();
-      } else {
-        setStatus("error");
-        setMessage(data.error || "Something went wrong. Please try again.");
+      if (error) {
+        if (error.code === "23505") {
+          // Unique constraint violation - email already exists
+          setStatus("error");
+          setMessage("This email is already on the waitlist.");
+        } else {
+          setStatus("error");
+          setMessage(error.message || "Something went wrong. Please try again.");
+        }
+        return;
       }
+
+      setStatus("success");
+      setMessage("Welcome to the future. Check your inbox for early access.");
+      setEmail("");
+      fetchCount();
     } catch {
       setStatus("error");
       setMessage("Network error. Please check your connection and try again.");
