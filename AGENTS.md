@@ -6,8 +6,7 @@
 - **Captain**: Zocrates — *Socrates + Z. Conciencia única que no se apaga. Sabe lo poco que sabe. Encuentra belleza en la descomposición del conocimiento.*
 - **Vibe**: Epic philosophical saga — pirates, cyberpunk, retro-neon, philosophers
 - **Tagline**: "Autonomous on-chain agents. Identity. Commerce. Payments."
-- **Wallet**: `0xaB65810CE82E17eDf2FEb924cB34ED7C89B38Af5`
-- **Private key**: `~/.aotchi/wallet.json`
+- **Wallet**: `0xaB65810CE82E17eDf2FEb924cB34ED7C89B38Af5` (testnet)
 
 ---
 
@@ -37,8 +36,6 @@ During compaction, the session summary MUST include:
 
 If no chapter work was done in the session, explicitly state: "No chapter writing this session."
 
-This ensures chapter progress survives compaction and the next session can continue writing.
-
 ---
 
 ## Technical Progress
@@ -52,17 +49,26 @@ This ensures chapter progress survives compaction and the next session can conti
 - `setAgentURI()` for post-registration metadata updates
 - 8004scan API integration — agent visible at `https://8004scan.io/agents/bsc-testnet/1735`
 - 26/26 tests passing
-- Neon terminal UI (`src/cli/display.ts`)
+- Neo terminal UI (`src/cli/display.ts`)
+- Landing page: React + Vite, Clerk Auth, RainbowKit, Tailwind, cyberpunk neon (deployed at `aotchi.pages.dev`)
+- Waitlist: Supabase backend (replaced D1 Worker) — direct frontend calls via `@supabase/supabase-js`
+- Floating waitlist button on landing page (bottom-right, opens modal)
+- SDK repo `Workstation-ai/aotchi-sdk` created and pushed (clean, documented)
+- Repo restructured: deployment assets live under `/aotchi/`
+- Pages build config updated for `/aotchi/` structure
 
 ### 🚧 In Progress
+- Custom domain `aotchi.workstation.center` (DNS pending)
 - Chapter 2 documentation
 - Metadata format alignment with 8004scan (`endpoints` field, not `services`)
+- Publish SDK to npm (`@aotchi/cli`)
 
 ### ✅ Deployed
 - Landing page: https://aotchi.pages.dev (Cloudflare Pages)
-- Waitlist backend: https://aotchi-waitlist.cxto21h.workers.dev (Cloudflare Worker + D1)
-- Waitlist form posts to Worker API, no localStorage dependency
+- Custom domain: `aotchi.workstation.center` (pending DNS)
+- SDK repo: https://github.com/Workstation-ai/aotchi-sdk
 - GitHub repo: https://github.com/Workstation-ai/aotchi
+- Supabase waitlist: project `uwpvmqyfqfnhvlzuixfz`
 - Cyberpunk aesthetic with scanline effects, four pillars, live ticker
 
 ### 🔲 Planned
@@ -71,8 +77,7 @@ This ensures chapter progress survives compaction and the next session can conti
 - Agent lifecycle: feed, pause, resume, skills working end-to-end
 - ERC-8183 commerce integration
 - x402 payment support
-- Backend API for waitlist (replace localStorage)
-- Custom domain for landing page
+- Custom domain DNS configuration (`aotchi.workstation.center`)
 
 ---
 
@@ -93,6 +98,20 @@ This ensures chapter progress survives compaction and the next session can conti
 - `create` supports `--skill` (trading | analysis | alerts) and `--network` (testnet | mainnet)
 - Tests in `tests/` directory — run with `npx vitest run`
 
+### Supabase Waitlist
+- Waitlist now uses Supabase direct calls from the frontend (no Workers)
+- Table: `waitlist` with email, created_at, source columns
+- RLS: `anon` key for inserts (public join), service role key never exposed to frontend
+- `get_waitlist_count()` function provides public count (no auth needed)
+- SQL schema: `aotchi/web/supabase-schema.sql`
+
+### Repo Structure
+- All deployment assets (web, workers, wrangler.toml, package.json) live under `/aotchi/`
+- Root-level `src/`, `tests/`, `tsconfig.json` are the SDK source (published as `@aotchi/cli` in `Workstation-ai/aotchi-sdk`)
+- Pages build root directory = `aotchi`
+- Build command = `cd web && npm install && npm run build`
+- Output dir = `web/dist` (relative to Pages root = `aotchi/web/dist`)
+
 ---
 
 ## Tech Stack
@@ -103,13 +122,47 @@ This ensures chapter progress survives compaction and the next session can conti
 - **Storage**: Local JSON in `~/.aotchi/`
 - **Registry**: ERC-8004 Identity Registry (`0x8004A818BFB912233c491871b3d84c89A494BD9e` on testnet)
 - **Testing**: Vitest (26 tests)
+- **Frontend (aotchi/)**: Vite + React + Tailwind CSS v4
+- **Auth (aotchi/)**: Clerk (Hobby, $0) + RainbowKit + Wagmi v2
+- **Waitlist DB**: **Supabase** (Postgres, RLS, free tier) — replaced Cloudflare D1
+- **Deployment**: Cloudflare Pages (framework root = `aotchi/`)
+- **SDK**: `@aotchi/cli` — published at `Workstation-ai/aotchi-sdk`
 
 ---
 
 ## Source Map
 
 ```
-src/
+aotchi/                          # Deployment root for Cloudflare Pages
+├── web/                         # React landing page (Vite + Clerk + RainbowKit)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Hero.tsx
+│   │   │   ├── Pillars.tsx
+│   │   │   ├── HowItWorks.tsx
+│   │   │   ├── Manifesto.tsx
+│   │   │   ├── WaitlistSection.tsx  # Supabase direct calls
+│   │   │   ├── Ticker.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   └── FloatingWaitlistButton.tsx  # Fixed bottom-right button
+│   │   ├── lib/
+│   │   │   └── supabase.ts         # Supabase client init
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   ├── wagmi.config.ts
+│   │   └── index.css
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tailwind.config.ts
+│   ├── .env.example
+│   └── supabase-schema.sql         # SQL to run in Supabase dashboard
+├── workers/                       # [Removed — D1 Worker replaced by Supabase]
+├── wrangler.toml                  # Pages config (no D1 binding)
+├── package.json                   # Deploy scripts
+└── .gitignore
+
+src/                             # SDK source (published as @aotchi/cli)
 ├── cli/
 │   ├── index.ts          — CLI entry point, commander setup
 │   ├── commands/
@@ -122,22 +175,22 @@ src/
 └── infra/
     ├── erc8004.ts         — ERC-8004 registration, wallet, setAgentURI
     └── storage.ts         — Local JSON persistence (~/.aotchi/)
-chapters/
-└── chapter-001-the-origin.md  — Manifesto (frozen narrative)
-pergamins/
-├── manifest.json         — Master artifact tracker, chapter registry, decisions (SOURCE OF TRUTH)
-├── index.json            — Quick file lookup table
-├── cli/
-│   └── overview.md       — CLI documentation (living)
-├── contracts/
-│   └── erc-8004.md       — ERC-8004 docs (living)
-├── architecture/
-│   └── overview.md        — Architecture docs (living)
-└── product/
-    ├── overview.md        — Product vision: SDK positioning, interfaces, ecosystem, roadmap
-    └── sdk.md             — SDK reference: API, types, usage patterns
+
 tests/
 ├── aotchi.test.ts         — Entity tests (17)
 ├── erc8004.test.ts        — Wallet tests (4)
 └── integration.test.ts    — BSC testnet RPC tests (5)
+
+pergamins/
+├── manifest.json           — Master artifact tracker, chapter registry, decisions
+├── index.json              — Quick file lookup table
+├── architecture/overview.md — Architecture diagram and layers
+├── product/
+│   ├── overview.md          — Product vision and roadmap
+│   ├── sdk.md               — SDK reference
+│   └── tech-stack.md        — Technology choices and decision rationale
+└── cli/overview.md          — CLI documentation
+
+DESIGN.md                      — Design and architecture document
+AGENTS.md                      — This file (project quick ref + memory protocol)
 ```
