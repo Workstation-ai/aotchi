@@ -18,9 +18,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           theme={darkTheme({
             accentColor: "#00ffd1",
             accentColorForeground: "#0A0C10",
-            blur: "0px",
-            radius: "lg",
-            shadow: "none",
           })}
         >
           <App />
