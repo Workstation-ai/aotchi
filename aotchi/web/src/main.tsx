@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { WagmiProvider } from "wagmi";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
-import { config } from "./wagmi.config.ts";
-import App from "./App";
+import { config } from "./wagmi.config";
+import { App } from "./App";
 import "./index.css";
 
 const clerkPublishableKey =
@@ -18,7 +18,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           theme={darkTheme({
             accentColor: "#00ffd1",
             accentColorForeground: "#0A0C10",
-            borderColor: "rgba(0,255,209,0.15)",
             blur: "0px",
             radius: "lg",
             shadow: "none",

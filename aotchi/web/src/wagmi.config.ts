@@ -14,20 +14,19 @@ const connectors = connectorsForWallets([
     groupName: "Recommended",
     wallets: [
       metaMaskWallet({ projectId }),
-      coinbaseWallet({ appName: "AOTCHI", projectId }),
+      coinbaseWallet({ appName: "AOTCHI" }),
       walletConnectWallet({ projectId }),
     ],
   },
 ]);
 
 export const config = createConfig({
-  autoConnect: true,
-  connectors,
   chains: [bsc, bscTestnet],
   transports: {
     [bsc.id]: http(),
     [bscTestnet.id]: http(),
   },
+  connectors,
 });
 
 export type ChainId = (typeof config.chains)[number]["id"];
