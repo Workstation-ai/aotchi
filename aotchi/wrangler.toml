@@ -1,9 +1,3 @@
 name = "aotchi"
 pages_build_output_dir = "web/dist"
-main = "workers/waitlist/index.ts"
 compatibility_date = "2026-07-28"
-
-[[d1_databases]]
-binding = "aotchi_waitlist"
-database_name = "aotchi-waitlist"
-database_id = "c47b7f8a-f6df-4be5-a58f-34fbd873bf69"
